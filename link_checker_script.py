@@ -1,46 +1,34 @@
-# status code checker
+import pandas as pd
+import time
 import requests
 import csv
-import time
+import urllib3
+
+SLEEP = 0
 
 from urllib3.exceptions import InsecureRequestWarning
 from urllib3 import disable_warnings
 disable_warnings(InsecureRequestWarning)
 
-SLEEP = 0 # Time in seconds the script should wait between requests
-PID = []
-PID_list = []
-url_list = []
-url_statuscodes = []
-url_statuscodes.append(["PID","url","status_code"]) # set the file header for output
+pid_loop = []
+url = ["url"]
+pid = ["pid"]
+Status = []
 
+cols = ['pid', 'url', 'Status']
+df = pd.read_csv('inputfile')
+print(df)
 
-def getStatuscode(url):
+def url_access(x):
     try:
-        r = requests.head(url,verify=False,timeout=5) # it is faster to only request the header
-        return (r.status_code)
-
+        return requests.head(x,timeout=5).status_code
     except:
         return -1
 
-# Url checks from file Input
-with open('urls.csv', newline='') as f:
-    reader = csv.reader(f)
-    for row in reader:
-        url_list.append(row[1])
-        PID_list.append(row[0])
+df['Status'] = df['url'].apply(url_access)
 
-# Loop over full list
-for PID in PID_list:
-    print(PID)
-    
-for url in url_list:
-    print(url)
-    check = [PID,url,getStatuscode(url)]
-    time.sleep(SLEEP)
-    url_statuscodes.append(check)
-    
-# Save file
-with open("urls_withStatusCode.csv", "w", newline="") as f:
-    writer = csv.writer(f)
-    writer.writerows(url_statuscodes)
+dfcount = df.groupby('Status')['url'].count().reset_index()
+
+print(df)
+df.to_csv('outputfile')
+
