@@ -14,7 +14,7 @@ url = ["url"]
 pid = ["pid"]
 Status = []
 inputfile = ['C:\\...urls.csv'] #enter the path to your input file
-outputfile = ['C:\\...statuscodes.csv] #enter the path to your outputfile]
+outputfile = ['C:\\...statuscodes.csv'] #enter the path to your outputfile
 
 cols = ['pid', 'url', 'Status'] #define column headers
 df = pd.read_csv('inputfile') #open input file
