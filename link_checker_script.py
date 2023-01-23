@@ -10,27 +10,25 @@ from urllib3.exceptions import InsecureRequestWarning
 from urllib3 import disable_warnings
 disable_warnings(InsecureRequestWarning)
 
-url = ["url"]
+url = ["URL"]
 pid = ["pid"]
 Status = []
-inputfile = ['C:\\...urls.csv'] #enter the path to your input file
-outputfile = ['C:\\...statuscodes.csv'] #enter the path to your outputfile
 
-cols = ['pid', 'url', 'Status'] #define column headers
-df = pd.read_csv('inputfile') #open input file
+
+df = pd.read_csv('C:\\...\\LinkChecker\\urls.csv')
+cols = ['pid', 'URL', 'Status']
 print(df)
 
-#get the url status code
 def url_access(x):
     try:
         return requests.head(x,timeout=5).status_code
     except:
         return -1
 
-df['Status'] = df['url'].apply(url_access)
+df['Status'] = df['URL'].apply(url_access)
 
-dfcount = df.groupby('Status')['url'].count().reset_index()
+dfcount = df.groupby('Status')['URL'].count().reset_index()
 
 print(df)
-df.to_csv('outputfile') #create outputfile with status codes
+df.to_csv('C:\\...outputfile.csv')
 
